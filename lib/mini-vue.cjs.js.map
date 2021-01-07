@@ -1,1 +1,1 @@
-{"version":3,"file":"mini-vue.cjs.js","sources":["../src/index.ts"],"sourcesContent":["console.log(8888)"],"names":[],"mappings":";;AAAA,OAAO,CAAC,GAAG,CAAC,IAAI,CAAC;;"}
+{"version":3,"file":"mini-vue.cjs.js","sources":["../src/runtime-code/createApp.ts","../src/runtime-code/h.ts"],"sourcesContent":["export const createApp = () => {}","export const h = () => {}"],"names":[],"mappings":";;;;IAAa,SAAS,GAAG;;ICAZ,CAAC,GAAG;;;;;"}

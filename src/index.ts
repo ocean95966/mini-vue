@@ -1,1 +1,1 @@
-console.log(8888)
+export * from './runtime-code'
