@@ -6,6 +6,7 @@
   "module": "lib/mini-vue.esm.js",
   "scripts": {
     "build": "rollup -c",
+    "demo": "node script/demo.js",
     "build:type": "tsc -p ./tsconfig.type.json",
     "test": "jest --no-cache"
   },
@@ -25,6 +26,8 @@
     "typescript": "^3.9.5"
   },
   "dependencies": {
-    "@vue/reactivity": "^3.0.0-beta.15"
+    "@types/express": "^4.17.9",
+    "@vue/reactivity": "^3.0.0-beta.15",
+    "express": "^4.17.1"
   }
 }
