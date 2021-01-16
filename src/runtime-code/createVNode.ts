@@ -7,13 +7,14 @@ export const createVNode = (type: any, props: any = {}, children?: string | Arra
         type,
         props,
         children,
+        __v_isVNode: true,
         shapeFlag: getShapeFlag(type)
     }
 
     if (Array.isArray(children)) {
-      vnode.shapeFlag = vnode.shapeFlag || ShapeFlags.ARRAY_CHILDREN
+        vnode.shapeFlag = vnode.shapeFlag |= ShapeFlags.ARRAY_CHILDREN
     } else if (typeof children === 'string') {
-        vnode.shapeFlag = vnode.shapeFlag || ShapeFlags.TEXT_CHILDREN
+        vnode.shapeFlag = vnode.shapeFlag |= ShapeFlags.TEXT_CHILDREN
     }
     
     return vnode;
@@ -23,4 +24,8 @@ function getShapeFlag(type: any) {
     return typeof type === "string"
       ? ShapeFlags.ELEMENT
       : ShapeFlags.STATEFUL_COMPONENT;
-  }
+}
+
+export function isVNode(value) {
+    return value ? value.__v_isVNode === true : false;
+}

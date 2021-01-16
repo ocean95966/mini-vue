@@ -6,5 +6,5 @@ var app = express();
 app.use(express.static(path.join(__dirname, '../lib/')));
 
 app.listen(3000, function () { 
-    console.log('listening at' + __dirname) 
+    console.log('listening [3000] at ' + __dirname) 
 });
