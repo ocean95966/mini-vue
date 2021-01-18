@@ -19,20 +19,19 @@ export const render = (vnode: any, container: string | HTMLElement) => {
 
 function patch(n1, n2, container = null) {
     const { type, shapeFlag } = n2
-
+ 
     switch (type) {
         case 'text':
+            console.log("处理 TEXT");
+            processText(n1, n2, container);
             break;
         default:
             if (shapeFlag & ShapeFlags.ELEMENT) {
                 console.log("处理 element");
                 processElement(n1, n2, container);
             }
-            if (shapeFlag & ShapeFlags.TEXT_CHILDREN) {
-                console.log("处理 TEXT");
-                processText(n1, n2, container);
-            }
-            if (shapeFlag & ShapeFlags.STATEFUL_COMPONENT) { 
+            
+            else if (shapeFlag & ShapeFlags.STATEFUL_COMPONENT) { 
                 console.log('处理 component')
                 processComponent(n1, n2, container)
             }
@@ -110,8 +109,8 @@ function mountChildren(children, el) {
 
         if (isVNode(VNodeChild)) {
             patch(null, VNodeChild, el);
-        } else {
-            const vnode = createVNode(VNodeChild)
+        } else if (typeof VNodeChild === 'string') {
+            const vnode = createVNode('text', {}, VNodeChild)
             patch(null, vnode, el)
         }
     });
