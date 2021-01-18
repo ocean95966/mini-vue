@@ -139,6 +139,21 @@ function initProps(instance) {
    instance.props = props
 }
 
+function exposePropsOnRenderContext(instance) {
+    const { ctx, propsOptions: [propsOptions] } = instance;
+    if (propsOptions) {
+        Object.keys(propsOptions).forEach(key => {
+            Object.defineProperty(ctx, key, {
+                enumerable: true,
+                configurable: true,
+                get: () => instance.props[key],
+                set: () => undefined
+            });
+        });
+    }
+}
+
+
 function setupStatefulComponent(instance) {
 
     const setupResult = instance.setup && instance.setup(instance.props)
