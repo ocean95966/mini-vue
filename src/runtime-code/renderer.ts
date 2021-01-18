@@ -124,14 +124,19 @@ function mountComponent(initialVNode, container) {
     setupRenderEffect(instance, container)
 }
 
-function setupComponent(instance) {
+function setupComponent(instance) {  
+   
     initProps(instance)
 
     setupStatefulComponent(instance)
+
+    // console.clear()
+    console.log(instance, 'setupComponent')
 }
 
 function initProps(instance) {
-    console.log(instance)
+   const {props} = instance.vnode;
+   instance.props = props
 }
 
 function setupStatefulComponent(instance) {
