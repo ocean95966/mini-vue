@@ -130,8 +130,7 @@ function setupComponent(instance) {
 
     setupStatefulComponent(instance)
 
-    // console.clear()
-    console.log(instance, 'setupComponent')
+
 }
 
 function initProps(instance) {
@@ -140,9 +139,9 @@ function initProps(instance) {
 }
 
 function exposePropsOnRenderContext(instance) {
-    const { ctx, propsOptions: [propsOptions] } = instance;
-    if (propsOptions) {
-        Object.keys(propsOptions).forEach(key => {
+    const { ctx, props } = instance;
+    if (props) {
+        Object.keys(props).forEach(key => {
             Object.defineProperty(ctx, key, {
                 enumerable: true,
                 configurable: true,
@@ -157,7 +156,7 @@ function exposePropsOnRenderContext(instance) {
 function setupStatefulComponent(instance) {
 
     const setupResult = instance.setup && instance.setup(instance.props)
-
+    exposePropsOnRenderContext(instance)
     handleSetupResult(instance, setupResult)
 
 }
