@@ -4,7 +4,7 @@ export function createComponentInstance(vnode) {
         type: vnode.type,
         vnode,
         props: {},
-        proxy: null,
+        proxy: {},
         isMounted: false
     }
 

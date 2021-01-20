@@ -139,10 +139,10 @@ function initProps(instance) {
 }
 
 function exposePropsOnRenderContext(instance) {
-    const { ctx, props } = instance;
+    const { proxy, props } = instance;
     if (props) {
         Object.keys(props).forEach(key => {
-            Object.defineProperty(ctx, key, {
+            Object.defineProperty(proxy, key, {
                 enumerable: true,
                 configurable: true,
                 get: () => instance.props[key],
@@ -156,7 +156,9 @@ function exposePropsOnRenderContext(instance) {
 function setupStatefulComponent(instance) {
 
     const setupResult = instance.setup && instance.setup(instance.props)
+  
     exposePropsOnRenderContext(instance)
+
     handleSetupResult(instance, setupResult)
 
 }
