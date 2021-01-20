@@ -91,13 +91,6 @@ function mountElement(vnode, container) {
         hostPatchProp(el, key, null, nextVal);
       }
     }
-  
-    // todo
-    // 触发 beforeMount() 钩子
-    console.log("vnodeHook  -> onVnodeBeforeMount");
-    console.log("DirectiveHook  -> beforeMount");
-    console.log("transition  -> beforeEnter");
-  
     // 插入
     hostInsert(el, container);
 
@@ -152,15 +145,36 @@ function exposePropsOnRenderContext(instance) {
     }
 }
 
+function exposeStateOnRenderContext(instance) {
+    const { proxy, setupState } = instance;
+    if (setupState) {
+        Object.keys(setupState).forEach(key => {
+            Object.defineProperty(proxy, key, {
+                enumerable: true,
+                configurable: true,
+                get: () => instance.setupState[key],
+                set: () => undefined
+            });
+        });
+    }
+}
+
 
 function setupStatefulComponent(instance) {
 
 
     let setupContext = createSetupContext(instance)
+
+    const {setup} = instance.type
    
-    const setupResult = instance.setup && instance.setup(...[instance.props, setupContext])
+    const setupResult = setup ? setup(...[instance.props, setupContext]) : {}
   
+    setupResult && (instance.setupState = setupResult)
+  
+    
     exposePropsOnRenderContext(instance)
+
+    exposeStateOnRenderContext(instance)
 
     handleSetupResult(instance, setupResult)
 
