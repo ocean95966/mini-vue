@@ -27,7 +27,7 @@
   },
   "dependencies": {
     "@types/express": "^4.17.9",
-    "@vue/reactivity": "^3.0.0-beta.15",
+    "@vue/reactivity": "^3.0.5",
     "express": "^4.17.1"
   }
 }

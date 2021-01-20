@@ -155,7 +155,10 @@ function exposePropsOnRenderContext(instance) {
 
 function setupStatefulComponent(instance) {
 
-    const setupResult = instance.setup && instance.setup(instance.props)
+
+    let setupContext = createSetupContext(instance)
+   
+    const setupResult = instance.setup && instance.setup(...[instance.props, setupContext])
   
     exposePropsOnRenderContext(instance)
 
@@ -176,6 +179,15 @@ function finishComponentSetup(instance) {
     const Component = instance.type;
 
     instance.render = Component.render
+}
+
+
+function createSetupContext(instance) {
+    return {
+        props: instance.props,
+        slots: {},
+        emit: () => {} 
+    }
 }
 
 function setupRenderEffect(instance, container) {
