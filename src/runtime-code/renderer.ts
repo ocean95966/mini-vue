@@ -1,4 +1,4 @@
-import { effect } from "@vue/reactivity";
+import { effect, toRaw, isReactive, isRef, unref, reactive } from "@vue/reactivity";
 import { ShapeFlags } from "../shared";
 import { createComponentInstance } from './component'
 import { queueJob } from "./scheduler";
@@ -60,8 +60,16 @@ function processText  (n1, n2, container, anchor = null) {
 function processElement(n1, n2, container) {
     if (!n1) {
       mountElement(n2, container);
-    } 
+    } else {
+        patchElement(n1, n2)
+    }
 }
+
+function patchElement(n1, n2) {
+   const el = (n2.el = n1.el)
+   hostSetElementText(el, n2.children);
+}
+
 
 function mountElement(vnode, container) {
     const { shapeFlag, props } = vnode;
@@ -155,11 +163,11 @@ function exposePropsOnRenderContext(instance) {
 function exposeStateOnRenderContext(instance) {
     const { proxy, setupState } = instance;
     if (setupState) {
-        Object.keys(setupState).forEach(key => {
+        Object.keys(toRaw(setupState)).forEach(key => {
             Object.defineProperty(proxy, key, {
                 enumerable: true,
                 configurable: true,
-                get: () => instance.setupState[key],
+                get: () => setupState[key],
                 set: () => undefined
             });
         });
@@ -175,20 +183,39 @@ function setupStatefulComponent(instance) {
     const {setup} = instance.type
    
     const setupResult = setup ? setup(...[instance.props, setupContext]) : {}
-    if (setup) {
-        console.log(setupResult, 'setupResult')
-    }
+   
     exposePropsOnRenderContext(instance)
 
     handleSetupResult(instance, setupResult)
 
 }
 
+const shallowUnwrapHandlers = {
+    get: (target, key, receiver) => unref(Reflect.get(target, key, receiver)),
+    set: (target, key, value, receiver) => {
+        const oldValue = target[key];
+        if (isRef(oldValue) && !isRef(value)) {
+            oldValue.value = value;
+            return true;
+        }
+        else {
+            return Reflect.set(target, key, value, receiver);
+        }
+    }
+};
+
+function proxyRefs(objectWithRefs) {
+    return isReactive(objectWithRefs)
+        ? objectWithRefs
+        : new Proxy(objectWithRefs, shallowUnwrapHandlers);
+}
+
 function handleSetupResult(instance, setupResult) {
     if (typeof setupResult === 'object') {
-        instance.setupState = setupResult
+        // 这里不用proxyRefs也行? 使用了proxyRefs  isReactive === false?
+        instance.setupState = proxyRefs(setupResult)
     }
-
+   
     exposeStateOnRenderContext(instance)
 
     finishComponentSetup(instance)
@@ -211,7 +238,7 @@ function createSetupContext(instance) {
 }
 
 function setupRenderEffect(instance, container) {
-    instance.update = effect(function componentEffect() {   console.log('无线次数被处罚')
+    instance.update = effect(function componentEffect() {   
         if (!instance.isMounted) {
             instance.subTree = instance.render(instance.proxy)
             
