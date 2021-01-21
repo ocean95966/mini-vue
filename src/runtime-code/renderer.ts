@@ -41,7 +41,14 @@ function patch(n1, n2, container = null) {
 function processComponent(n1, n2, container) {
     if (!n1) {
         mountComponent(n2, container);
+    } else {
+        updateComponent(n1, n2)
     }
+}
+
+function updateComponent(n1, n2) {
+    const instance = (n2.component = n1.component);
+    console.log(n2, 'n22222222')
 }
 
 
@@ -168,13 +175,10 @@ function setupStatefulComponent(instance) {
     const {setup} = instance.type
    
     const setupResult = setup ? setup(...[instance.props, setupContext]) : {}
-  
-    setupResult && (instance.setupState = setupResult)
-  
-    
+    if (setup) {
+        console.log(setupResult, 'setupResult')
+    }
     exposePropsOnRenderContext(instance)
-
-    exposeStateOnRenderContext(instance)
 
     handleSetupResult(instance, setupResult)
 
@@ -184,6 +188,8 @@ function handleSetupResult(instance, setupResult) {
     if (typeof setupResult === 'object') {
         instance.setupState = setupResult
     }
+
+    exposeStateOnRenderContext(instance)
 
     finishComponentSetup(instance)
 }
@@ -205,7 +211,7 @@ function createSetupContext(instance) {
 }
 
 function setupRenderEffect(instance, container) {
-    instance.update = effect(function componentEffect() {
+    instance.update = effect(function componentEffect() {   console.log('无线次数被处罚')
         if (!instance.isMounted) {
             instance.subTree = instance.render(instance.proxy)
             
