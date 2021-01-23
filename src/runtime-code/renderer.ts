@@ -22,17 +22,14 @@ function patch(n1, n2, container = null) {
  
     switch (type) {
         case 'text':
-            console.log("处理 TEXT");
             processText(n1, n2, container);
             break;
         default:
             if (shapeFlag & ShapeFlags.ELEMENT) {
-                console.log("处理 element");
                 processElement(n1, n2, container);
             }
             
             else if (shapeFlag & ShapeFlags.STATEFUL_COMPONENT) { 
-                console.log('处理 component')
                 processComponent(n1, n2, container)
             }
     }
@@ -48,7 +45,6 @@ function processComponent(n1, n2, container) {
 
 function updateComponent(n1, n2) {
     const instance = (n2.component = n1.component);
-    console.log(n2, 'n22222222')
 }
 
 
@@ -68,6 +64,7 @@ function processElement(n1, n2, container) {
 function patchElement(n1, n2) {
    const el = (n2.el = n1.el)
    hostSetElementText(el, n2.children);
+   console.log(n2)
 }
 
 
@@ -79,12 +76,7 @@ function mountElement(vnode, container) {
   
     // 支持单子组件和多子组件的创建
     if (shapeFlag & ShapeFlags.TEXT_CHILDREN) {
-      // 举个栗子
-      // render(){
-      //     return h("div",{},"test")
-      // }
-      // 这里 children 就是 test ，只需要渲染一下就完事了
-      console.log(`处理文本:${vnode.children}`);
+     
       hostSetElementText(el, vnode.children);
     } else if (shapeFlag & ShapeFlags.ARRAY_CHILDREN) {
       // 举个栗子

@@ -13,16 +13,10 @@ export function hostCreateTextElement(type) {
 }
 
 export function hostSetElementText(el, text) {
-  console.log("hostSetElementText", el, text);
   el.innerText = text;
 }
 
 export function hostPatchProp(el, key, preValue, nextValue) {
-  // preValue 之前的值
-  // 为了之后 update 做准备的值
-  // nextValue 当前的值
-  console.log(`hostPatchProp 设置属性:${key} 值:${nextValue}`);
-  console.log(`key: ${key} 之前的值是:${preValue}`);
 
   switch (key) {
     case "id":

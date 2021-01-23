@@ -9,3 +9,23 @@ export const enum ShapeFlags {
     // vnode 的 children 为数组类型
     ARRAY_CHILDREN = 16,
   }
+
+
+  /**
+   * 
+   * 
+   * // encode the vnode type information into a bitmap
+      const shapeFlag = isString(type)
+          ? 1 
+          :  isSuspense(type)
+              ? 128 
+              : isTeleport(type)
+                  ? 64 
+                  : isObject(type)
+                      ? 4 
+                      : isFunction(type)
+                          ? 2 
+                          : 0;
+   * 
+   * 
+   */
